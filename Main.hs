@@ -18,15 +18,14 @@ data ParseResult
   = IntList [Int]
   | IntTree (Tree Int)
 
-readTree x = case readMaybe @(Tree Int) x of
-        Nothing -> Left "failed"
-        Just tr -> Right (IntTree tr)
-
 parse :: String -> Either String ParseResult 
 parse x = 
     case readMaybe @[Int] x of
         Nothing -> readTree x
         Just res -> Right (IntList res)
+    where readTree x = case readMaybe @(Tree Int) x of
+            Nothing -> Left "failed"
+            Just tr -> Right (IntTree tr)
 
 makeTree :: ParseResult -> Tree Int 
 makeTree (IntTree x) = x
