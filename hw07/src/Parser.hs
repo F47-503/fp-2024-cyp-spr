@@ -37,7 +37,7 @@ instance Monad Parser where
             Left err -> Left err
 
 instance Alternative Parser where
-  empty = failedParse "Parser is empty"
+  empty = failedParse "Parsing ended unexpectedly"
   (<|>) x y = Parser chosenParse
     where chosenParse s =
             case parse x s of
@@ -48,8 +48,8 @@ parseIf :: (Char -> Bool) -> Parser Char
 parseIf cond = Parser parsePattern
   where parsePattern s =
           case s of
-          h : t -> if cond h then Right (t, h) else Left (ParseError "Wrong symbol")
-          _ -> Left (ParseError "Nothing to parse")
+          h : t -> if cond h then Right (t, h) else Left (ParseError (h:" is bad character"))
+          _ -> Left (ParseError "Parsing ended unexpectedly")
 
 filterChar :: Char -> Parser Char
 filterChar char = parseIf (char ==)
@@ -63,16 +63,16 @@ parseToken = mapM filterChar
 parseSpaces :: Parser [Char]
 parseSpaces = some (parseIf isSpace)
 
-parseVar :: Parser (Expr a)
-parseVar = do
-  var <- some (parseIf isAlphaNum)
-  if var == "sqrt" then failedParse ("Inappropriate variable " ++ var) else return (Var var)
-
 parseSq :: (Read a, Num a) => Parser (Expr a)
 parseSq = do
   _ <- parseToken "sqrt"
   _ <- parseSpaces
   Sq <$> parseExpr
+
+parseVar :: Parser (Expr a)
+parseVar = do
+  var <- some (parseIf isAlphaNum)
+  if var == "sqrt" then failedParse "sqrt can't be a variable" else return (Var var)
 
 parseOp :: (Read a, Num a) => Char -> (Expr a -> Expr a -> Expr a) -> Parser (Expr a)
 parseOp opChar op = do
@@ -94,7 +94,7 @@ binOps :: (Read a, Num a) => [Parser (Expr a)]
 binOps = map (uncurry parseOp) binOpsList
 
 allOps :: (Read a, Num a) => [Parser (Expr a)]
-allOps = parseNumber : parseVar : parseSq : binOps
+allOps = parseNumber : parseSq : parseVar : binOps
 
 parseExpr :: (Read a, Num a) => Parser (Expr a)
 parseExpr = asum allOps
