@@ -24,6 +24,7 @@ dependencies:
 - containers
 - tasty
 - tasty-hunit
+- mtl
 
 ghc-options:
 - -Wall
@@ -50,6 +51,7 @@ executables:
     - -Wno-type-defaults
     dependencies:
     - expr
+    - mtl
 
 tests:
   main-test:
@@ -66,3 +68,4 @@ tests:
     - expr
     - tasty
     - tasty-hunit
+    - mtl
