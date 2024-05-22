@@ -44,5 +44,5 @@ and it is the way how I implemented it. One of the most common examples is just 
     The good thing about this implementation is that it can be easily upgraded to Dijkstra algorithm (as we are keeping some structure with minimum pop anyway).
  5) I provided some unit tests for this implementations which can be run using  `stack test`.
 
-    Check (this)[https://codeforces.com/contest/1057/submission/262142770] for example of library usage. This shows that this library can even be used for CP programming, and optimizations (such as using Data.HashMap instead of Data.Map) are posiible.
+    Check [this](https://codeforces.com/contest/1057/submission/262142770) for example of library usage. This shows that this library can even be used for CP programming, and optimizations (such as using Data.HashMap instead of Data.Map) are posiible.
     I don't see where the error can appear here if the types are not colliding, therefore I would like to receive at most 10 + 15 + 15 + 5 + 10 = 55 points.
